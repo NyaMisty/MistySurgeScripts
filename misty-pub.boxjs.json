@@ -1,0 +1,40 @@
+{
+    "id": "misty-pub.app.sub",
+    "name": "Misty应用订阅",
+    "author": "@NyaMisty",
+    "icon": "https://avatars.githubusercontent.com/u/5344431",
+    "repo": "https://github.com/NyaMisty/MistySurgeScripts",
+    "apps": [
+        {
+            "id": "idlefish-search",
+            "name": "闲鱼搜索-关键字过滤",
+            "keys": [
+                "misty.idlefish_search.enabled",
+                "misty.idlefish_search.filter"
+            ],
+            "author": "@NyaMisty",
+            "repo": "https://github.com/NyaMisty/MistySurgeScripts/tree/master/IdleFishSearchFilter",
+            "icons": ["https://raw.githubusercontent.com/NyaMisty/MistySurgeScripts/master/IdleFishSearchFilter/icon.jpg", "https://raw.githubusercontent.com/NyaMisty/MistySurgeScripts/master/IdleFishSearchFilter/icon.jpg"],
+            "script": "https://raw.githubusercontent.com/NyaMisty/MistySurgeScripts/master/IdleFishSearchFilter/misty.idlefish-search.js",
+            "settings": [
+                {
+					"id": "misty.idlefish_search.enabled",
+					"name": "总功能开关",
+					"val": true,
+					"type": "boolean",
+					"desc": "是否启用此APP修改"
+				},
+                {
+					"id": "misty.idlefish_search.filter",
+					"name": "需要过滤的关键字",
+					"val": "",
+					"type": "textarea",
+                    "autoGrow": true,
+                    "rows": 5,
+					"placeholder": "收[^货]\n暂挂",
+                    "desc": "使用回车换行每一个关键字"
+				}
+            ]
+        }
+    ]
+}
