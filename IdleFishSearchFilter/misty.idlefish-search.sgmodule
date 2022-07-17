@@ -2,7 +2,7 @@
 #!desc=关键字过滤闲鱼搜索结果
 
 [Script]
-idlefish-search = type=http-response,script-path=https://raw.githubusercontent.com/NyaMisty/MistySurgeScripts/master/IdleFishSearchFilter/misty.idlefish-search.js,pattern=https://acs.m.goofish.com/gw/mtop.taobao.idle.search.glue/8.0,max-size=524288,requires-body=true,timeout=5,debug=true,enable=true
+idlefish-search = type=http-response,script-path=https://raw.githubusercontent.com/NyaMisty/MistySurgeScripts/master/IdleFishSearchFilter/misty.idlefish-search.js,pattern=https://acs.m.goofish.com/gw/(mtop.taobao.idle.search.glue/8.0|mtop.taobao.idlemtopsearch.search/1.0),max-size=524288,requires-body=true,timeout=5,debug=true,enable=true
 
 [MITM]
 hostname = %INSERT%, acs.m.goofish.com

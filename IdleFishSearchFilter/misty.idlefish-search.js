@@ -52,7 +52,13 @@ function doProcessResponse(resp) {
 
     var a = JSON.parse(resp.body)
     a.data.resultList = a.data.resultList.filter((x) => {
-        var title = x.data.item.main.exContent.title
+        var t = ""
+        var title = ""
+        t = x.data.item.main.exContent.title
+        if (t) { title += t }
+        t = x.data.item.main.exContent.detailParams?.title
+        if (t) { title += t }
+        
         for (var filter_regexp of FISH_FILTERS) {
             if (title.search(filter_regexp) >= 0) {
                 console.log("Filtering item: " + title)
