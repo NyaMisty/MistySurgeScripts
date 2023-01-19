@@ -1,0 +1,11 @@
+#!name=Misty-eChongdian No AD
+#!desc=e充电开屏广告屏蔽
+
+[Script]
+echongdian_ad_metareq = type=http-request,script-path=https://raw.githubusercontent.com/NyaMisty/MistySurgeScripts/master/eChongdianNoAd/misty.echongdian.js,pattern=https://aserver-evone.echargenet.com/orange/datacenter/snapshot-meta,enable=true,max-size=0,requires-body=true,timeout=5,debug=true
+
+echongdian_ad_patchobj = type=http-response,script-path=https://raw.githubusercontent.com/NyaMisty/MistySurgeScripts/master/eChongdianNoAd/misty.echongdian.js,pattern=http://cdn-evone-ceph.echargenet.com/gw-emas-cdn/patched.*,enable=true,max-size=0,requires-body=true,timeout=5,debug=true
+
+
+[MITM]
+hostname = %INSERT%, aserver-evone.echargenet.com
