@@ -1,3 +1,4 @@
+console.log("fuck Quantumult!")
 const $ = new Env('echongdian');
 
 function reGroup(regexp, str, groupI) {
@@ -10,20 +11,61 @@ function cleanHeaders(headers) {
         Object.entries(headers)
         .filter(([k,v]) => {
             const kl = k.toLowerCase()
-            return !(kl === "connection" || kl === "accept-ranges")
+            return !(kl === "connection" || kl === "accept-ranges" || kl === "content-encoding" || kl === "transfer-encoding")
         })
         .map(([k,v]) => ({[k]:v}))
     );
 }
 
-var PATCH_OBJ_PREFIX = "patched";
+const PATCH_OBJ_PREFIX = "patched";
+
+const isReq = typeof $response === 'undefined'
+const isResp = !isReq
+
+function doneModResp(resp) {
+    // Input: surge response object {status?: Int, body: string, headers?: Object}
+
+    // Fuck Quantumult - must clear or manually setup content-length
+    if (resp.headers && resp.body) {
+        resp.headers['Content-Length'] = undefined
+        resp.headers['content-length'] = undefined
+        // const newLen = resp.body.length
+        // if (resp.headers['Content-Length']) {
+        //     resp.headers['Content-Length'] = newLen
+        // } else if (resp.headers['content-length']) {
+        //     resp.headers['content-length'] = newLen
+        // }
+    }
+    if ($.isQuanX()) {
+        if (resp.status) {
+            // Fuck Quantumult - status is "StatusLine" instead of "StatusCode"
+            resp.status = "HTTP/1.1 " + resp.status + ""
+        }
+        if (isReq) {
+            // resp -> const myResponse = {
+            //     status: myStatus,
+            //     headers: myHeaders, // Optional.
+            //     body: myData // Optional.
+            // };
+            return resp // must be used with script-echo-response
+        } else {
+            return resp // must be used script-response-body
+        }
+    } else {
+        if (isReq) {
+            return {
+                response: resp
+            }
+        } else {
+            return resp
+        }
+    }
+}
 
 (async () => {
     $.log('echongdian start!')
 
-    const isReq = typeof $response === 'undefined'
-    const isResp = !isReq
-
+    
     let url = $request.url
 
     // if (!isReq) {
@@ -46,41 +88,36 @@ var PATCH_OBJ_PREFIX = "patched";
             url: newUrl,
             headers: $request.headers,
         })
+        let hdr = cleanHeaders(r.headers)
+
         $.log("snapshot req resp: " + r.body)
         if (!r.body) {
-            return {
-                response: {
+            return doneModResp({
                     body: "",
-                    headers: cleanHeaders(r.headers)
-                },
-            }
+                    headers: hdr
+                })
         }
         let resp = JSON.parse(r.body) // server return empty when no update, but we patched it
         if (resp.id === realLastId) {
             console.log("respid: " + resp.id + " realid: " + realLastId + " same")
-            return {
-                response: {
-                    body: "",
-                    headers: cleanHeaders(r.headers)
-                },
-            }
+            return doneModResp({
+                body: "",
+                headers: hdr
+            })
         }
 
         resp.id = PATCH_OBJ_PREFIX + resp.id
-        return {
-            response: {
-                body: JSON.stringify(resp),
-                headers: cleanHeaders(r.headers)
-            }
-        }
+        return doneModResp({
+            body: JSON.stringify(resp),
+            headers: hdr
+        })
     }
 
-    if (isResp && url.indexOf("echargenet.com/gw-emas-cdn/") >= 0) {
+    if ((isResp || isReq) && url.indexOf("echargenet.com/gw-emas-cdn/") >= 0) {
         $.log("Got cdn obj resp!")
-        // directly change cdn
         const objId = reGroup(/\/gw-emas-cdn\/(.*?)$/g, url, 1)[0]
         if (false) {
-            $.log("Use cdn obj resp body!")
+            $.log("Use cdn obj resp body!") // because our url changed to patchedXXXX, we cannot use original body
             var oriBody = $response.body
             var needPatch = oriBody.indexOf('"configSnapshots"')
             var headers = $response.headers
@@ -112,21 +149,11 @@ var PATCH_OBJ_PREFIX = "patched";
             }
             const newBody = JSON.stringify(mainJson)
             $.msg(`e充电 热更新Patch成功`)
-            if (isReq) {
-                return {
-                    response: {
-                        status: 200,
-                        body: newBody,
-                        headers: cleanHeaders(headers),
-                    }
-                }
-            } else {
-                return {
-                    status: 200,
-                    body: newBody,
-                    headers: cleanHeaders(headers),
-                }
-            }
+            return doneModResp({
+                status: 200,
+                body: newBody,
+                headers: cleanHeaders(headers),
+            })
         }
         
         return {}
@@ -135,7 +162,7 @@ var PATCH_OBJ_PREFIX = "patched";
     return {}
 })()
     .then((ret) => {
-        // $.log("script result: " + JSON.stringify(ret))
+        $.log("script result: " + JSON.stringify(ret))
         $.done(ret)
     })
     .catch((e) => {

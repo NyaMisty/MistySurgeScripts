@@ -2,9 +2,9 @@
 # e充电开屏广告屏蔽
 
 # echongdian_ad_metareq
-^https:\/\/aserver-evone.echargenet.com\/orange\/datacenter\/snapshot-meta url script-request-body https://raw.githubusercontent.com/NyaMisty/MistySurgeScripts/master/eChongdianNoAd/misty.echongdian.js
+^https:\/\/aserver-evone.echargenet.com\/orange\/datacenter\/snapshot-meta url script-echo-response https://raw.githubusercontent.com/NyaMisty/MistySurgeScripts/master/eChongdianNoAd/misty.echongdian.js
 
 # echongdian_ad_patchobj
-^http:\/\/cdn-evone-ceph.echargenet.com\/gw-emas-cdn\/patched.* url script-response-body https://raw.githubusercontent.com/NyaMisty/MistySurgeScripts/master/eChongdianNoAd/misty.echongdian.js
+^http:\/\/cdn-evone-ceph.echargenet.com\/gw-emas-cdn\/patched.* url script-echo-response https://raw.githubusercontent.com/NyaMisty/MistySurgeScripts/master/eChongdianNoAd/misty.echongdian.js
 
 hostname = aserver-evone.echargenet.com
