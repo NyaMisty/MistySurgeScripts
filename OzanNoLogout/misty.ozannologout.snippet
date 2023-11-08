@@ -1,0 +1,16 @@
+# Misty-OzanNoLogout
+# Ozan免掉线 (together made with @ios151)
+
+[rewrite_local]
+
+^https://op-prod-tr.ozan.com/api/users/ensecure/verify url script-request-header https://raw.githubusercontent.com/NyaMisty/MistySurgeScripts/master/OzanNoLogout/misty.ozannologout.js
+
+^https://op-prod-tr.ozan.com/api/users/logout url reject
+
+^https://op-prod-tr.ozan.com/api/users/ensecure/deactivate url reject
+
+^https://op-prod-tr.ozan.com/api/users/forget-device/ url reject
+
+
+[mitm]
+hostname = op-prod-tr.ozan.com
