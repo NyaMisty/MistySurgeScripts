@@ -1,0 +1,13 @@
+#!name=Misty-OzanNoLogout
+#!desc=Ozan免掉线
+
+[Rule]
+URL-REGEX,^https://op-prod-tr.ozan.com/api/users/logout,REJECT
+URL-REGEX,^https://op-prod-tr.ozan.com/api/users/ensecure/deactivate,REJECT
+URL-REGEX,^https://op-prod-tr.ozan.com/api/users/forget-device/,REJECT
+
+[Script]
+ozan_fakeensecure = type=http-request,pattern=^https://op-prod-tr.ozan.com/api/users/ensecure/verify,requires-body=0,debug=1,script-path=https://raw.githubusercontent.com/NyaMisty/MistySurgeScripts/master/OzanNoLogout/misty.ozannologout.js
+
+[MITM]
+hostname = %INSERT% op-prod-tr.ozan.com
